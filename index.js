@@ -5,7 +5,7 @@ async function getUtxo(address) {
     console.log("Utxo:", utxo);
     return utxo;
 }
-//getUtxo("addr_test1qr94r8rg0hmyrwe37up3lldkcv7hln99kwkd6gnwv2wzqq3gxj6v24vdrm9c7kt36wxe0yl8aft9vkj5kqzkjnycugjsxr3sa8");
+getUtxo("addr_test1qr94r8rg0hmyrwe37up3lldkcv7hln99kwkd6gnwv2wzqq3gxj6v24vdrm9c7kt36wxe0yl8aft9vkj5kqzkjnycugjsxr3sa8");
 
 async function verifyTransaction(to, txHash) {
     const utxo = await getUtxo(to);
@@ -19,6 +19,6 @@ async function verifyTransaction(to, txHash) {
     console.log("Found:", found);
     return found;
 }
-//verifyTransaction("addr_test1qr94r8rg0hmyrwe37up3lldkcv7hln99kwkd6gnwv2wzqq3gxj6v24vdrm9c7kt36wxe0yl8aft9vkj5kqzkjnycugjsxr3sa8", "b72667be2b045635e9131a12d441808ff5cdf276db4bcc4ab23daab4139d42ad");
+verifyTransaction("addr_test1qr94r8rg0hmyrwe37up3lldkcv7hln99kwkd6gnwv2wzqq3gxj6v24vdrm9c7kt36wxe0yl8aft9vkj5kqzkjnycugjsxr3sa8", "b72667be2b045635e9131a12d441808ff5cdf276db4bcc4ab23daab4139d42ad");
 
 
