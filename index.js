@@ -19,7 +19,7 @@ async function getUtxo(address) {
     console.log("Utxo:", utxo);
     return utxo;
 }
-//getUtxo("addr_test1qr94r8rg0hmyrwe37up3lldkcv7hln99kwkd6gnwv2wzqq3gxj6v24vdrm9c7kt36wxe0yl8aft9vkj5kqzkjnycugjsxr3sa8");
+getUtxo("addr_test1qznnk0ap083y9pr945ggdesyx33dqdskrcc6ucfw2vc3ak3dk4lut7ppcfk2640fhvn0r85x4yvk2luqrmjjj60yc52q7mlefk");
 
 async function verifyTransaction(to, txHash) {
     const utxo = await getUtxo(to);
@@ -127,7 +127,7 @@ async function mintTo(signerAddress, policyId, mintScript, assetName, amount, im
     console.log(txHash);
 }
 
-mintTo("addr_test1qznnk0ap083y9pr945ggdesyx33dqdskrcc6ucfw2vc3ak3dk4lut7ppcfk2640fhvn0r85x4yvk2luqrmjjj60yc52q7mlefk",
+/*mintTo("addr_test1qznnk0ap083y9pr945ggdesyx33dqdskrcc6ucfw2vc3ak3dk4lut7ppcfk2640fhvn0r85x4yvk2luqrmjjj60yc52q7mlefk",
     "d08e14c9e788d16d5b8fde7baccad116b6c7edb0aea245c7e56bb50a",
     {keyHash: 'a73b3fa179e2428465ad1086e6043462d036161e31ae612e53311eda', type: 'sig'},
     "First NFT",
@@ -135,5 +135,49 @@ mintTo("addr_test1qznnk0ap083y9pr945ggdesyx33dqdskrcc6ucfw2vc3ak3dk4lut7ppcfk264
     "https://dull.com",
     "This is the first NFT",
     "addr_test1qznnk0ap083y9pr945ggdesyx33dqdskrcc6ucfw2vc3ak3dk4lut7ppcfk2640fhvn0r85x4yvk2luqrmjjj60yc52q7mlefk",
-    "./priv/wallet/Fasih/Fasih.payment.skey")
+    "./priv/wallet/Fasih/Fasih.payment.skey")*/
 
+async function burnNFT(signerAddress, nftId, amount, signerPath) {
+    const balanceSender = await cardano.queryUtxo(signerAddress);
+    const _txIn = [...balanceSender];
+    console.log(balanceSender);
+    const nftIndex = balanceSender.findIndex(elem => elem.value[nftId] > 0);
+    console.log(nftIndex);
+    if (balanceSender[nftIndex]["value"][nftId] == amount)
+        balanceSender.splice(nftIndex, 1);
+    else
+        balanceSender[nftIndex]["value"][nftId] -= amount;
+    const _txOut = [...balanceSender];
+    const txInfo = {
+        txIn: _txIn,
+        txOut: [{address: signerAddress, value: {lovelace: _txOut[0].value.lovelace + 1500000}}],
+        mint: [
+            { action: "mint", quantity: -1, asset: nftId, script: {keyHash: 'a73b3fa179e2428465ad1086e6043462d036161e31ae612e53311eda', type: 'sig'} },
+        ],
+        // mint: {
+        //     actions: [{ type: "mint", quantity: -1, asset: nftId }],
+        //     script: [{keyHash: 'a73b3fa179e2428465ad1086e6043462d036161e31ae612e53311eda', type: 'sig'}]
+        //   },
+        witnessCount: 2
+    };
+    console.log(txInfo);
+    //return;
+    const raw = cardano.transactionBuildRaw(txInfo);
+    console.log(raw);
+    const fee = cardano.transactionCalculateMinFee({
+        ...txInfo,
+        txBody: raw,
+        witnessCount: 1,
+    });
+    txInfo.txOut[0].value.lovelace -= fee;
+    const tx = cardano.transactionBuildRaw({ ...txInfo, fee });
+    const txSigned = cardano.transactionSign({
+        txBody: tx,
+        signingKeys: [signerPath, signerPath],
+    });
+    console.log("All good");
+    const txHash = cardano.transactionSubmit(txSigned);
+    console.log("TxHash: " + txHash);
+}
+
+//burnNFT("addr_test1qznnk0ap083y9pr945ggdesyx33dqdskrcc6ucfw2vc3ak3dk4lut7ppcfk2640fhvn0r85x4yvk2luqrmjjj60yc52q7mlefk", "d08e14c9e788d16d5b8fde7baccad116b6c7edb0aea245c7e56bb50a.4669727374204e4654", 1, "./priv/wallet/Fasih/Fasih.payment.skey");
