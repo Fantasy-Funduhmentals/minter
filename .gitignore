@@ -5,3 +5,6 @@ tmp/
 # dotenv environment variables file
 .env
 .secret
+
+# others
+package-lock.json
