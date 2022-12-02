@@ -2,7 +2,7 @@ var express = require("express");
 var cors = require("cors");
 
 var nftRouter = require("./routes/nftRouter");
-const port = 3000;
+const port = 3001;
 
 var app = express();
 
