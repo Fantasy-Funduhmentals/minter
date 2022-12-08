@@ -45,7 +45,7 @@ async function mint(policyId, mintScript, name, quantity, imageUrl, description,
         metadata,
         witnessCount: 2
     }
-    const buildTransaction = (tx) => {
+    /*const buildTransaction = (tx) => {
         const raw = cardano.transactionBuildRaw(tx);
         const fee = cardano.transactionCalculateMinFee({
             ...tx,
@@ -53,15 +53,15 @@ async function mint(policyId, mintScript, name, quantity, imageUrl, description,
         });
         tx.txOut[0].value.lovelace -= fee;
         return cardano.transactionBuildRaw({ ...tx, fee });
-    }
-    const raw = buildTransaction(tx);
-    const signTransaction = (signerPath, tx) => {
+    }*/
+    const raw = await buildTransaction(tx);
+    /*const signTransaction = (signerPath, tx) => {
         return cardano.transactionSign({
             signingKeys: [signerPath, signerPath],
             txBody: tx
         })
-    };
-    const signed = signTransaction(signerPath, raw);
+    };*/
+    const signed = await signTransaction(signerPath, raw);
     const txHash = cardano.transactionSubmit(signed);
     console.log(txHash);
     return txHash;
@@ -106,7 +106,7 @@ async function mintTo(policyId, mintScript, name, quantity, imageUrl, descriptio
         metadata,
         witnessCount: 2
     }
-    const buildTransaction = (tx) => {
+    /*const buildTransaction = (tx) => {
         const raw = cardano.transactionBuildRaw(tx);
         const fee = cardano.transactionCalculateMinFee({
             ...tx,
@@ -114,15 +114,15 @@ async function mintTo(policyId, mintScript, name, quantity, imageUrl, descriptio
         });
         tx.txOut[0].value.lovelace -= fee;
         return cardano.transactionBuildRaw({ ...tx, fee });
-    }
-    const raw = buildTransaction(tx);
-    const signTransaction = (signerPath, tx) => {
+    }*/
+    const raw = await buildTransaction(tx);
+    /*const signTransaction = (signerPath, tx) => {
         return cardano.transactionSign({
             signingKeys: [signerPath, signerPath],
             txBody: tx
         })
-    };
-    const signed = signTransaction(signerPath, raw);
+    };*/
+    const signed = await signTransaction(signerPath, raw);
     const txHash = cardano.transactionSubmit(signed);
     console.log(txHash);
     return txHash;
@@ -151,7 +151,7 @@ async function burn(mintScript, nftId, quantity, signerAddress, signerPath) {
         ],
         witnessCount: 2
     }
-    const buildTransaction = (tx) => {
+    /*const buildTransaction = (tx) => {
         const raw = cardano.transactionBuildRaw(tx);
         const fee = cardano.transactionCalculateMinFee({
             ...tx,
@@ -159,15 +159,15 @@ async function burn(mintScript, nftId, quantity, signerAddress, signerPath) {
         });
         tx.txOut[0].value.lovelace -= fee;
         return cardano.transactionBuildRaw({ ...tx, fee });
-    }
-    const raw = buildTransaction(tx);
-    const signTransaction = (signerPath, tx) => {
+    }*/
+    const raw = await buildTransaction(tx);
+    /*const signTransaction = (signerPath, tx) => {
         return cardano.transactionSign({
             signingKeys: [signerPath, signerPath],
             txBody: tx
         })
-    };
-    const signed = signTransaction(signerPath, raw);
+    };*/
+    const signed = await signTransaction(signerPath, raw);
     const txHash = cardano.transactionSubmit(signed);
     console.log(txHash);
     return txHash;
@@ -233,7 +233,7 @@ async function transfer(nftId, quantity, receiverAddress, signerAddress, signerP
         txOut: [txOut, {address: receiverAddress, value: {lovelace: cardano.toLovelace(1.5), [nftId]: quantity}}],
         witnessCount: 2
     }
-    const buildTransaction = (tx) => {
+    /*const buildTransaction = (tx) => {
         const raw = cardano.transactionBuildRaw(tx);
         const fee = cardano.transactionCalculateMinFee({
             ...tx,
@@ -241,20 +241,37 @@ async function transfer(nftId, quantity, receiverAddress, signerAddress, signerP
         });
         tx.txOut[0].value.lovelace -= fee;
         return cardano.transactionBuildRaw({ ...tx, fee });
-    }
-    const raw = buildTransaction(tx);
-    const signTransaction = (signerPath, tx) => {
+    }*/
+    const raw = await buildTransaction(tx);
+    /*const signTransaction = (signerPath, tx) => {
         return cardano.transactionSign({
             signingKeys: [signerPath, signerPath],
             txBody: tx
         })
-    };
-    const signed = signTransaction(signerPath, raw);
+    };*/
+    const signed = await signTransaction(signerPath, raw);
     const txHash = cardano.transactionSubmit(signed);
     console.log(txHash);
     return txHash;
 }
 //transfer("d08e14c9e788d16d5b8fde7baccad116b6c7edb0aea245c7e56bb50a.4669727374204e4654", 1, "addr_test1qznnk0ap083y9pr945ggdesyx33dqdskrcc6ucfw2vc3ak3dk4lut7ppcfk2640fhvn0r85x4yvk2luqrmjjj60yc52q7mlefk", "addr_test1qznnk0ap083y9pr945ggdesyx33dqdskrcc6ucfw2vc3ak3dk4lut7ppcfk2640fhvn0r85x4yvk2luqrmjjj60yc52q7mlefk", "./priv/wallet/Fasih/Fasih.payment.skey");
+
+const buildTransaction = async (tx) => {
+    const raw = cardano.transactionBuildRaw(tx);
+    const fee = cardano.transactionCalculateMinFee({
+        ...tx,
+        txBody: raw
+    });
+    tx.txOut[0].value.lovelace -= fee;
+    return cardano.transactionBuildRaw({ ...tx, fee });
+}
+
+const signTransaction = async (signerPath, tx) => {
+    return cardano.transactionSign({
+        signingKeys: [signerPath, signerPath],
+        txBody: tx
+    })
+};
 
 module.exports = {
     getUtxo,
