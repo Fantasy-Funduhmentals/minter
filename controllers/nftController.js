@@ -260,5 +260,6 @@ module.exports = {
     getUtxo,
     mint,
     mintTo,
-    burn
+    burn,
+    transfer
 }

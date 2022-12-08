@@ -34,4 +34,14 @@ router.post("/burn", async (req, res) => {
     res.send({"success": true, "result": result});
 });
 
+router.post("/transfer", async (req, res) => {
+    const nftId = req.body.nftId;
+    const quantity = req.body.quantity;
+    const receiverAddress = req.body.receiverAddress;
+    const signerAddress = req.body.signerAddress;
+    const signerPath = req.body.signerPath;
+    const result = await nftController.transfer(nftId, quantity, receiverAddress, signerAddress, signerPath);
+    res.send({"success": true, "result": result});
+});
+
 module.exports = router;
