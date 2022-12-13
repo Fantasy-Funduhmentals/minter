@@ -67,7 +67,7 @@ async function mint(policyId, mintScript, name, quantity, imageUrl, description,
     return txHash;
 }
 
-async function mintTo(policyId, mintScript, name, quantity, imageUrl, description, receiverAddress, signerAddress, signerPath) {
+async function mintTo(policyId, mintScript, name, quantity, videoUrl, playerId, receiverAddress, signerAddress, signerPath) {
     const POLICY_ID = policyId.toString();
     const ASSET_NAME = name.toString();
     const ASSET_NAME_HEX = name.split("").map((c) => c.charCodeAt(0).toString(16).padStart(2, "0")).join("");
@@ -77,8 +77,8 @@ async function mintTo(policyId, mintScript, name, quantity, imageUrl, descriptio
             [POLICY_ID]: {
                 [name]: {
                     name: ASSET_NAME,
-                    image: imageUrl,
-                    description: description,
+                    videoUrl: videoUrl,
+                    playerId: playerId,
                 },
             },
         },
@@ -125,7 +125,7 @@ async function mintTo(policyId, mintScript, name, quantity, imageUrl, descriptio
     const signed = await signTransaction(signerPath, raw);
     const txHash = cardano.transactionSubmit(signed);
     console.log(txHash);
-    return txHash;
+    return {nftId: ASSET_ID, txHash};
 }
 
 async function burn(mintScript, nftId, quantity, signerAddress, signerPath) {
