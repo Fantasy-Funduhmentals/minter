@@ -14,13 +14,13 @@ router.post("/mintTo", async (req, res) => {
     const mintScript = req.body.mintScript; 
     const name = req.body.name;
     const quantity = req.body.quantity;
-    const imageUrl = req.body.imageUrl;
-    const description = req.body.description;
+    const videoUrl = req.body.videoUrl;
+    const playerId = req.body.playerId;
     const receiverAddress = req.body.receiverAddress;
     const signerAddress = req.body.signerAddress;
     const signerPath = req.body.signerPath;
-    const result = await nftController.mintTo(policyId, mintScript, name, quantity, imageUrl, description, receiverAddress, signerAddress, signerPath);
-    res.send({"success": true, "result": result});
+    const result = await nftController.mintTo(policyId, mintScript, name, quantity, videoUrl, playerId, receiverAddress, signerAddress, signerPath);
+    res.send({"success": true, result});
 });
 
 router.post("/burn", async (req, res) => {
