@@ -1,4 +1,5 @@
 const cardano = require("../helpers/cardano");
+const fs = require('fs');
 
 async function getUtxo(address) {
     const utxo = await cardano.queryUtxo(address);
@@ -272,6 +273,25 @@ const signTransaction = async (signerPath, tx) => {
         txBody: tx
     })
 };
+
+const exportWallet = async (account) => {
+    try {
+        const wallet = cardano.wallet(account);
+        const skey = fs.readFileSync(wallet.payment.skey, 'utf8');
+        const vkey = fs.readFileSync(wallet.payment.vkey, 'utf8');
+        const address = fs.readFileSync(wallet.payment.addr, 'utf8');
+        const result = {
+            address,
+            publicKey: JSON.parse(vkey),
+            privateKey: JSON.parse(skey)
+        }
+        console.log(result);
+        return result;
+    } 
+    catch (err) {
+        console.log(err);
+    }
+}
 
 module.exports = {
     getUtxo,
