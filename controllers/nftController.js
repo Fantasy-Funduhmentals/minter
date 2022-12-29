@@ -255,7 +255,6 @@ async function transfer(nftId, quantity, receiverAddress, signerAddress, signerP
     console.log(txHash);
     return txHash;
 }
-//transfer("d08e14c9e788d16d5b8fde7baccad116b6c7edb0aea245c7e56bb50a.4669727374204e4654", 1, "addr_test1qznnk0ap083y9pr945ggdesyx33dqdskrcc6ucfw2vc3ak3dk4lut7ppcfk2640fhvn0r85x4yvk2luqrmjjj60yc52q7mlefk", "addr_test1qznnk0ap083y9pr945ggdesyx33dqdskrcc6ucfw2vc3ak3dk4lut7ppcfk2640fhvn0r85x4yvk2luqrmjjj60yc52q7mlefk", "./priv/wallet/Fasih/Fasih.payment.skey");
 
 const buildTransaction = async (tx) => {
     const raw = cardano.transactionBuildRaw(tx);
