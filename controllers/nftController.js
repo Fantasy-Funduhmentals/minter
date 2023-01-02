@@ -175,16 +175,19 @@ async function burn(mintScript, nftId, quantity, signerAddress, signerPath) {
 }
 
 async function createWallet (account) {
-    const payment = cardano.addressKeyGen(account);
-    const stake = cardano.stakeAddressKeyGen(account);
-    cardano.stakeAddressBuild(account);
-    cardano.addressBuild(account, {
-        paymentVkey: payment.vkey,
-        stakeVkey: stake.vkey,
-    });
-    const wallet = cardano.wallet(account);
-    console.log(wallet);
-    return wallet;
+    try {
+        const payment = cardano.addressKeyGen(account);
+        cardano.addressBuild(account, {
+            paymentVkey: payment.vkey
+        });
+        const wallet = cardano.wallet(account);
+        const address = fs.readFileSync(wallet.payment.addr, 'utf8');
+        console.log(address);
+        return address;
+    }
+    catch(err) {
+        return null;
+    }
 }
 
 async function getMintScript(wallet) {
@@ -294,6 +297,7 @@ const exportWallet = async (account) => {
 
 module.exports = {
     getUtxo,
+    createWallet,
     mint,
     mintTo,
     burn,

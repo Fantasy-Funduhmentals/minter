@@ -9,6 +9,12 @@ router.get("/utxo", async (req, res) => {
     res.send({"success": true, "result": result});
 });
 
+router.post("/createWallet", async (req, res) => {
+    const name = req.body.name;
+    const result = await nftController.createWallet(name);
+    res.send({"success": true, result});
+});
+
 router.post("/mintTo", async (req, res) => {
     const policyId = req.body.policyId;
     const mintScript = req.body.mintScript; 
