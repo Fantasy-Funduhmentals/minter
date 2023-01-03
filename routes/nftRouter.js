@@ -129,6 +129,4 @@ router.post("/burn", async (req, res) => {
     res.send({"success": true, result});
 });
 
-
-
 module.exports = router;
