@@ -3,15 +3,37 @@ const nftController = require("../controllers/nftController");
 
 var router = express.Router();
 
-router.get("/utxo", async (req, res) => {
-    const address = req.query.address;
-    const result = await nftController.getUtxo(address);
-    res.send({"success": true, "result": result});
-});
-
 router.post("/createWallet", async (req, res) => {
     const name = req.body.name;
     const result = await nftController.createWallet(name);
+    res.send({"success": true, result});
+});
+
+// router.get("/exportWallet", async (req, res) => {
+//     const name = req.query.name;
+//     const result = await nftController.exportWallet(name);
+//     res.send({"success": true, result});
+// });
+
+router.get("/utxo", async (req, res) => {
+    const address = req.query.address;
+    const result = await nftController.getUtxo(address);
+    res.send({"success": true, result});
+});
+
+router.get("/getMintScript", async (req, res) => {
+    const name = req.query.name;
+    const result = await nftController.getMintScript(name);
+    res.send({"success": true, result});
+});
+
+router.get("/getPolicyId", async (req, res) => {
+    const keyHash = req.query.keyHash;
+    const mintScript = {
+        keyHash,
+        type: "sig"
+    };
+    const result = await nftController.getPolicyId(mintScript);
     res.send({"success": true, result});
 });
 
@@ -37,7 +59,7 @@ router.post("/burn", async (req, res) => {
     const signerPath = req.body.signerPath;
     console.log(mintScript);
     const result = await nftController.burn(mintScript, nftId, quantity, signerAddress, signerPath);
-    res.send({"success": true, "result": result});
+    res.send({"success": true, result});
 });
 
 router.post("/transfer", async (req, res) => {
@@ -47,7 +69,7 @@ router.post("/transfer", async (req, res) => {
     const signerAddress = req.body.signerAddress;
     const signerPath = req.body.signerPath;
     const result = await nftController.transfer(nftId, quantity, receiverAddress, signerAddress, signerPath);
-    res.send({"success": true, "result": result});
+    res.send({"success": true, result});
 });
 
 module.exports = router;
