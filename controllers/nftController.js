@@ -37,24 +37,39 @@ const exportWallet = async (account) => {
 }
 
 const getUtxo = async (address)  => {
-    const utxo = await cardano.queryUtxo(address);
-    console.log("Utxo:", utxo);
-    return utxo;
+    try {
+        const utxo = await cardano.queryUtxo(address);
+        return utxo;
+    }
+    catch(err) {
+        console.log(err);
+        return false;
+    }
 }
 
 const getMintScript = async (wallet) => {
-    const mintScript = {
-        keyHash: cardano.addressKeyHash(wallet),
-        type: "sig"
+    try {
+        const mintScript = {
+            keyHash: cardano.addressKeyHash(wallet),
+            type: "sig"
+        }
+        return mintScript;
     }
-    console.log(mintScript);
-    return mintScript;
+    catch(err) {
+        console.log(err);
+        return false;
+    }
 }
 
 const getPolicyId = async (mintScript) => {
-    const policyId = cardano.transactionPolicyid(mintScript);
-    console.log(policyId);
-    return policyId;
+    try {
+        const policyId = cardano.transactionPolicyid(mintScript);
+        return policyId;
+    }
+    catch(err) {
+        console.log(err);
+        return false;
+    }
 }
 
 const mint = async (policyId, mintScript, name, quantity, imageUrl, description, signerAddress, signerPath) => {
