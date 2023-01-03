@@ -1,19 +1,42 @@
 var express = require("express");
+var {query, body, validationResult} = require("express-validator");
 const nftController = require("../controllers/nftController");
 
 var router = express.Router();
 
-router.post("/createWallet", async (req, res) => {
-    const name = req.body.name;
-    const result = await nftController.createWallet(name);
-    res.send({"success": true, result});
-});
+router.post("/createWallet", [
+    body('name').not().isEmpty()
+    ],
+    async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(422).send({success: false, result: errors.array()});
+        }
+        const name = req.body.name;
+        const result = await nftController.createWallet(name);
+        if (!result) {
+            return res.status(500).send({success: false});
+        }
+        res.send({success: true, result});
+    }
+);
 
-// router.get("/exportWallet", async (req, res) => {
-//     const name = req.query.name;
-//     const result = await nftController.exportWallet(name);
-//     res.send({"success": true, result});
-// });
+// router.get("/exportWallet", [
+//     query('name').not().isEmpty()
+//     ],
+//     async (req, res) => {
+//         const errors = validationResult(req);
+//         if (!errors.isEmpty()) {
+//             return res.status(422).send({success: false, result: errors.array()});
+//         }
+//         const name = req.query.name;
+//         const result = await nftController.exportWallet(name);
+//         if (!result) {
+//             return res.status(500).send({success: false});
+//         }
+//         res.send({success: true, result});  
+//     }
+// );
 
 router.get("/utxo", async (req, res) => {
     const address = req.query.address;
@@ -71,5 +94,9 @@ router.post("/transfer", async (req, res) => {
     const result = await nftController.transfer(nftId, quantity, receiverAddress, signerAddress, signerPath);
     res.send({"success": true, result});
 });
+
+const createWallet = async (req) => {
+
+}
 
 module.exports = router;

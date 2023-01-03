@@ -1,12 +1,6 @@
 const cardano = require("../helpers/cardano");
 const fs = require('fs');
 
-const getUtxo = async (address)  => {
-    const utxo = await cardano.queryUtxo(address);
-    console.log("Utxo:", utxo);
-    return utxo;
-}
-
 const createWallet = async (account) => {
     try {
         const payment = cardano.addressKeyGen(account);
@@ -15,11 +9,11 @@ const createWallet = async (account) => {
         });
         const wallet = cardano.wallet(account);
         const address = fs.readFileSync(wallet.payment.addr, 'utf8');
-        console.log(address);
         return address;
     }
     catch(err) {
-        return null;
+        console.log(err);
+        return false;
     }
 }
 
@@ -34,13 +28,18 @@ const exportWallet = async (account) => {
             publicKey: JSON.parse(vkey),
             privateKey: JSON.parse(skey)
         }
-        console.log(result);
         return result;
     } 
-    catch (err) {
+    catch(err) {
         console.log(err);
-        return null;
+        return false;
     }
+}
+
+const getUtxo = async (address)  => {
+    const utxo = await cardano.queryUtxo(address);
+    console.log("Utxo:", utxo);
+    return utxo;
 }
 
 const getMintScript = async (wallet) => {
