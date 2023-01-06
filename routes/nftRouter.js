@@ -94,39 +94,87 @@ router.get("/getPolicyId", [
     }
 );
 
-router.post("/mintTo", async (req, res) => {
-    const policyId = req.body.policyId;
-    const mintScript = req.body.mintScript; 
-    const name = req.body.name;
-    const quantity = req.body.quantity;
-    const videoUrl = req.body.videoUrl;
-    const playerId = req.body.playerId;
-    const receiverAddress = req.body.receiverAddress;
-    const signerAddress = req.body.signerAddress;
-    const signerPath = req.body.signerPath;
-    const result = await nftController.mintTo(policyId, mintScript, name, quantity, videoUrl, playerId, receiverAddress, signerAddress, signerPath);
-    res.send({"success": true, result});
-});
+router.post("/mintTo", [
+    body('policyId').isString().not().isEmpty(),
+    body('mintScript').not().isEmpty(),
+    body('name').isString().not().isEmpty(),
+    body('quantity').isNumeric().not().isEmpty(),
+    body('videoUrl').isArray().not().isEmpty(),
+    body('playerId').isString().not().isEmpty(),
+    body('receiverAddress').isString().not().isEmpty(),
+    body('signerAddress').isString().not().isEmpty(),
+    body('signerPath').isString().not().isEmpty()
+    ], 
+    async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(422).send({success: false, result: errors.array()});
+        }
+        const policyId = req.body.policyId;
+        const mintScript = req.body.mintScript; 
+        const name = req.body.name;
+        const quantity = req.body.quantity;
+        const videoUrl = req.body.videoUrl;
+        const playerId = req.body.playerId;
+        const receiverAddress = req.body.receiverAddress;
+        const signerAddress = req.body.signerAddress;
+        const signerPath = req.body.signerPath;
+        const result = await nftController.mintTo(policyId, mintScript, name, quantity, videoUrl, playerId, receiverAddress, signerAddress, signerPath);
+        if (!result) {
+            return res.status(500).send({success: false});
+        }
+        res.send({"success": true, result});
+    }
+);
 
-router.post("/transfer", async (req, res) => {
-    const nftId = req.body.nftId;
-    const quantity = req.body.quantity;
-    const receiverAddress = req.body.receiverAddress;
-    const signerAddress = req.body.signerAddress;
-    const signerPath = req.body.signerPath;
-    const result = await nftController.transfer(nftId, quantity, receiverAddress, signerAddress, signerPath);
-    res.send({"success": true, result});
-});
+router.post("/transfer", [
+    body('nftId').isString().not().isEmpty(),
+    body('quantity').isNumeric().not().isEmpty(),
+    body('receiverAddress').isString().not().isEmpty(),
+    body('signerAddress').isString().not().isEmpty(),
+    body('signerPath').isString().not().isEmpty()
+    ],
+    async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(422).send({success: false, result: errors.array()});
+        }
+        const nftId = req.body.nftId;
+        const quantity = req.body.quantity;
+        const receiverAddress = req.body.receiverAddress;
+        const signerAddress = req.body.signerAddress;
+        const signerPath = req.body.signerPath;
+        const result = await nftController.transfer(nftId, quantity, receiverAddress, signerAddress, signerPath);
+        if (!result) {
+            return res.status(500).send({success: false});
+        }
+        res.send({"success": true, result});
+    }
+);
 
-router.post("/burn", async (req, res) => {
-    const mintScript = req.body.mintScript; 
-    const nftId = req.body.nftId;
-    const quantity = req.body.quantity;
-    const signerAddress = req.body.signerAddress;
-    const signerPath = req.body.signerPath;
-    console.log(mintScript);
-    const result = await nftController.burn(mintScript, nftId, quantity, signerAddress, signerPath);
-    res.send({"success": true, result});
-});
+router.post("/burn", [
+    body('mintScript').not().isEmpty(),
+    body('nftId').isString().not().isEmpty(),
+    body('quantity').isNumeric().not().isEmpty(),
+    body('signerAddress').isString().not().isEmpty(),
+    body('signerPath').isString().not().isEmpty()
+    ],
+    async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(422).send({success: false, result: errors.array()});
+        }
+        const mintScript = req.body.mintScript; 
+        const nftId = req.body.nftId;
+        const quantity = req.body.quantity;
+        const signerAddress = req.body.signerAddress;
+        const signerPath = req.body.signerPath;
+        const result = await nftController.burn(mintScript, nftId, quantity, signerAddress, signerPath);
+        if (!result) {
+            return res.status(500).send({success: false});
+        }
+        res.send({"success": true, result});
+    }
+);
 
 module.exports = router;
