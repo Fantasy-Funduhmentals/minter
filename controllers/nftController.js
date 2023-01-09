@@ -120,7 +120,7 @@ const mint = async (policyId, mintScript, name, quantity, imageUrl, description,
     }
 }
 
-const mintTo = async (policyId, mintScript, name, quantity, videoUrl, playerId, receiverAddress, signerAddress, signerPath) => {
+const mintTo = async (policyId, mintScript, name, quantity, videoUrl, playerId, receiverAddress, signerAddress, signerName) => {
     try {
         const POLICY_ID = policyId.toString();
         const ASSET_NAME = name.toString();
@@ -159,7 +159,8 @@ const mintTo = async (policyId, mintScript, name, quantity, videoUrl, playerId, 
             witnessCount: 2
         }
         const raw = await buildTransaction(tx);
-        const signed = await signTransaction(signerPath, raw);
+        const signer = cardano.wallet(signerName);
+        const signed = await signTransaction(signer.payment.skey, raw);
         const txHash = cardano.transactionSubmit(signed);
         return {nftId: ASSET_ID, txHash};
     }
@@ -169,7 +170,7 @@ const mintTo = async (policyId, mintScript, name, quantity, videoUrl, playerId, 
     }
 }
 
-const transfer = async (nftId, quantity, receiverAddress, signerAddress, signerPath) => {
+const transfer = async (nftId, quantity, receiverAddress, signerAddress, signerName) => {
     try {
         const txIn = await cardano.queryUtxo(signerAddress);
         var txOut = {address: signerAddress, value : {lovelace: cardano.toLovelace(-1.5), [nftId]: -1 * quantity}};
@@ -188,7 +189,8 @@ const transfer = async (nftId, quantity, receiverAddress, signerAddress, signerP
             witnessCount: 2
         }
         const raw = await buildTransaction(tx);
-        const signed = await signTransaction(signerPath, raw);
+        const signer = cardano.wallet(signerName);
+        const signed = await signTransaction(signer.payment.skey, raw);
         const txHash = cardano.transactionSubmit(signed);
         return txHash;
     }
@@ -198,7 +200,7 @@ const transfer = async (nftId, quantity, receiverAddress, signerAddress, signerP
     }
 }
 
-const burn = async (mintScript, nftId, quantity, signerAddress, signerPath) => {
+const burn = async (mintScript, nftId, quantity, signerAddress, signerName) => {
     try {
         const txIn = await cardano.queryUtxo(signerAddress);
         var txOut = {address: signerAddress, value : {lovelace: 0, [nftId]: -1 * quantity}};
@@ -220,7 +222,8 @@ const burn = async (mintScript, nftId, quantity, signerAddress, signerPath) => {
             witnessCount: 2
         }
         const raw = await buildTransaction(tx);
-        const signed = await signTransaction(signerPath, raw);
+        const signer = cardano.wallet(signerName);
+        const signed = await signTransaction(signer.payment.skey, raw);
         const txHash = cardano.transactionSubmit(signed);
         return txHash;
     }

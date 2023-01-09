@@ -103,7 +103,7 @@ router.post("/mintTo", [
     body('playerId').isString().not().isEmpty(),
     body('receiverAddress').isString().not().isEmpty(),
     body('signerAddress').isString().not().isEmpty(),
-    body('signerPath').isString().not().isEmpty()
+    body('signerName').isString().not().isEmpty()
     ], 
     async (req, res) => {
         const errors = validationResult(req);
@@ -118,8 +118,8 @@ router.post("/mintTo", [
         const playerId = req.body.playerId;
         const receiverAddress = req.body.receiverAddress;
         const signerAddress = req.body.signerAddress;
-        const signerPath = req.body.signerPath;
-        const result = await nftController.mintTo(policyId, mintScript, name, quantity, videoUrl, playerId, receiverAddress, signerAddress, signerPath);
+        const signerName = req.body.signerName;
+        const result = await nftController.mintTo(policyId, mintScript, name, quantity, videoUrl, playerId, receiverAddress, signerAddress, signerName);
         if (!result) {
             return res.status(500).send({success: false});
         }
@@ -132,7 +132,7 @@ router.post("/transfer", [
     body('quantity').isNumeric().not().isEmpty(),
     body('receiverAddress').isString().not().isEmpty(),
     body('signerAddress').isString().not().isEmpty(),
-    body('signerPath').isString().not().isEmpty()
+    body('signerName').isString().not().isEmpty()
     ],
     async (req, res) => {
         const errors = validationResult(req);
@@ -143,8 +143,8 @@ router.post("/transfer", [
         const quantity = req.body.quantity;
         const receiverAddress = req.body.receiverAddress;
         const signerAddress = req.body.signerAddress;
-        const signerPath = req.body.signerPath;
-        const result = await nftController.transfer(nftId, quantity, receiverAddress, signerAddress, signerPath);
+        const signerName = req.body.signerName;
+        const result = await nftController.transfer(nftId, quantity, receiverAddress, signerAddress, signerName);
         if (!result) {
             return res.status(500).send({success: false});
         }
@@ -157,7 +157,7 @@ router.post("/burn", [
     body('nftId').isString().not().isEmpty(),
     body('quantity').isNumeric().not().isEmpty(),
     body('signerAddress').isString().not().isEmpty(),
-    body('signerPath').isString().not().isEmpty()
+    body('signerName').isString().not().isEmpty()
     ],
     async (req, res) => {
         const errors = validationResult(req);
@@ -168,8 +168,8 @@ router.post("/burn", [
         const nftId = req.body.nftId;
         const quantity = req.body.quantity;
         const signerAddress = req.body.signerAddress;
-        const signerPath = req.body.signerPath;
-        const result = await nftController.burn(mintScript, nftId, quantity, signerAddress, signerPath);
+        const signerName = req.body.signerName;
+        const result = await nftController.burn(mintScript, nftId, quantity, signerAddress, signerName);
         if (!result) {
             return res.status(500).send({success: false});
         }
