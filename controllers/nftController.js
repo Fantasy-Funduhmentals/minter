@@ -160,6 +160,7 @@ const mintTo = async (policyId, mintScript, name, quantity, videoUrl, playerId, 
         }
         const raw = await buildTransaction(tx);
         const signer = cardano.wallet(signerName);
+        console.log(signer);
         const signed = await signTransaction(signer.payment.skey, raw);
         const txHash = cardano.transactionSubmit(signed);
         return {nftId: ASSET_ID, txHash};
