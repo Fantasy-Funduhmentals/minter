@@ -5,7 +5,7 @@ const cardano = new CardanocliJs({
   shelleyGenesisPath: "../config/shelley-genesis.json",
   cliPath: "../binary/cardano-cli",
   socketPath: "../node.socket",
-  dir: "../cli/"
+  dir: "../cli"
 });
 
 module.exports = cardano;
