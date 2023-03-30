@@ -1,4 +1,4 @@
-const cardano = require("../helpers/cardano");
+const cardano = require("../helpers/cardanoMain");
 const fs = require('fs');
 
 const createWallet = async (account) => {
