@@ -4,8 +4,11 @@ const fs = require('fs');
 const createWallet = async (account) => {
     try {
         const payment = cardano.addressKeyGen(account);
+        const stake = cardanocliJs.stakeAddressKeyGen(account);
+        cardano.stakeAddressBuild(account);
         cardano.addressBuild(account, {
-            paymentVkey: payment.vkey
+            paymentVkey: payment.vkey,
+            stakeVkey: stake.vkey
         });
         const wallet = cardano.wallet(account);
         const address = fs.readFileSync(wallet.payment.addr, 'utf8');
