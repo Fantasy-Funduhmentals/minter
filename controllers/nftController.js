@@ -4,7 +4,7 @@ const fs = require('fs');
 const createWallet = async (account) => {
     try {
         const payment = cardano.addressKeyGen(account);
-        const stake = cardanocliJs.stakeAddressKeyGen(account);
+        const stake = cardano.stakeAddressKeyGen(account);
         cardano.stakeAddressBuild(account);
         cardano.addressBuild(account, {
             paymentVkey: payment.vkey,
