@@ -123,7 +123,7 @@ const mint = async (policyId, mintScript, name, quantity, imageUrl, description,
     }
 }
 
-const mintTo = async (policyId, mintScript, name, quantity, videoUrl, playerId, receiverAddress, signerAddress, signerName) => {
+const mintTo = async (policyId, mintScript, name, quantity, imageUrl, videoUrl, playerId, receiverAddress, signerAddress, signerName) => {
     try {
         const POLICY_ID = policyId.toString();
         const ASSET_NAME = name.toString();
@@ -134,7 +134,14 @@ const mintTo = async (policyId, mintScript, name, quantity, videoUrl, playerId, 
                 [POLICY_ID]: {
                     [name]: {
                         name: ASSET_NAME,
-                        videoUrl: videoUrl,
+                        image: imageUrl,
+                        files: [
+                            {
+                                src: videoUrl,
+                                name: ASSET_NAME,
+                                mediaType: "video/mp4"
+                            }
+                        ],
                         playerId: playerId,
                     },
                 },

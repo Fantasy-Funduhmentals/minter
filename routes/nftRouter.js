@@ -99,6 +99,7 @@ router.post("/mintTo", [
     body('mintScript').not().isEmpty(),
     body('name').isString().not().isEmpty(),
     body('quantity').isNumeric().not().isEmpty(),
+    //body('imageUrl').isArray().not().isEmpty(),
     body('videoUrl').isArray().not().isEmpty(),
     body('playerId').isString().not().isEmpty(),
     body('receiverAddress').isString().not().isEmpty(),
@@ -114,12 +115,13 @@ router.post("/mintTo", [
         const mintScript = req.body.mintScript; 
         const name = req.body.name;
         const quantity = req.body.quantity;
+        const imageUrl = req.body.imageUrl;
         const videoUrl = req.body.videoUrl;
         const playerId = req.body.playerId;
         const receiverAddress = req.body.receiverAddress;
         const signerAddress = req.body.signerAddress;
         const signerName = req.body.signerName;
-        const result = await nftController.mintTo(policyId, mintScript, name, quantity, videoUrl, playerId, receiverAddress, signerAddress, signerName);
+        const result = await nftController.mintTo(policyId, mintScript, name, quantity, imageUrl, videoUrl, playerId, receiverAddress, signerAddress, signerName);
         if (!result) {
             return res.status(500).send({success: false});
         }
