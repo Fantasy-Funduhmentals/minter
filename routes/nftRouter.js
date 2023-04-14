@@ -154,6 +154,29 @@ router.post("/transfer", [
     }
 );
 
+router.post("/send", [
+    body('amount').isNumeric().not().isEmpty(),
+    body('receiverAddress').isString().not().isEmpty(),
+    body('signerAddress').isString().not().isEmpty(),
+    body('signerName').isString().not().isEmpty()
+    ],
+    async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(422).send({success: false, result: errors.array()});
+        }
+        const amount = req.body.amount;
+        const receiverAddress = req.body.receiverAddress;
+        const signerAddress = req.body.signerAddress;
+        const signerName = req.body.signerName;
+        const result = await nftController.send(amount, receiverAddress, signerAddress, signerName);
+        if (!result) {
+            return res.status(500).send({success: false});
+        }
+        res.send({"success": true, result});
+    }
+);
+
 router.post("/burn", [
     body('mintScript').not().isEmpty(),
     body('nftId').isString().not().isEmpty(),

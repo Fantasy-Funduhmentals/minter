@@ -211,6 +211,36 @@ const transfer = async (nftId, quantity, receiverAddress, signerAddress, signerN
     }
 }
 
+const send = async (amount, receiverAddress, signerAddress, signerName) => {
+    try {
+        const txIn = await cardano.queryUtxo(signerAddress);
+        var txOut = {address: signerAddress, value : {lovelace: -1 * cardano.toLovelace(amount)}};
+        for (var i = 0; i < txIn.length; i++) {
+            var assets = Object.keys(txIn[i].value);
+            for (var j = 0; j < assets.length; j++) {
+                if (txOut["value"][assets[j]]) 
+                    txOut["value"][assets[j]] += txIn[i]["value"][assets[j]];
+                else
+                    txOut["value"][assets[j]] = txIn[i]["value"][assets[j]];
+            }
+        }
+        const tx = {
+            txIn: txIn,
+            txOut: [txOut, {address: receiverAddress, value: {lovelace: cardano.toLovelace(amount)}}],
+            witnessCount: 2
+        }
+        const raw = await buildTransaction(tx);
+        const signer = cardano.wallet(signerName);
+        const signed = await signTransaction(signer.payment.skey, raw);
+        const txHash = cardano.transactionSubmit(signed);
+        return txHash;
+    }
+    catch(err) {
+        console.log(err);
+        return false;
+    }
+}
+
 const burn = async (mintScript, nftId, quantity, signerAddress, signerName) => {
     try {
         const txIn = await cardano.queryUtxo(signerAddress);
@@ -282,5 +312,6 @@ module.exports = {
     getPolicyId,
     mintTo,
     transfer,
+    send,
     burn
 }
